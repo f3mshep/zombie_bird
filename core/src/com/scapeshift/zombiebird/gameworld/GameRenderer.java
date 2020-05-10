@@ -3,6 +3,7 @@ package com.scapeshift.zombiebird.gameworld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,6 +11,13 @@ import com.scapeshift.zombiebird.gameobjects.Bird;
 import com.scapeshift.zombiebird.zbHelpers.AssetLoader;
 
 public class GameRenderer {
+
+    private Bird bird;
+
+    private TextureRegion bg, grass;
+    private Animation birdAnimation;
+    private TextureRegion birdMid, birdDown, birdUp;
+    private TextureRegion skullUp, skullDown, bar;
 
     private GameWorld gameWorld;
     private OrthographicCamera camera;
@@ -34,12 +42,12 @@ public class GameRenderer {
 
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
+
+        initGameObjects();
+        initAssets();
     }
 
     public void render(float runTime){
-
-        Bird bird = gameWorld.getBird();
-
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -58,14 +66,44 @@ public class GameRenderer {
 
         batcher.begin();
         batcher.disableBlending();
-        batcher.draw(AssetLoader.bg, 0, midPointY + 23, 136, 43);
+        batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
         batcher.enableBlending();
 
-        batcher.draw(AssetLoader.birdAnimation.getKeyFrame(runTime),
-                bird.getX(), bird.getY(), bird.getWidth(), bird.getHeight());
+        if (bird.shouldNotFlap()){
+            batcher.draw(
+                    birdMid,
+                    bird.getX(),
+                    bird.getY(),
+                    bird.getWidth() / 2.0f,
+                    bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(), 1,1, bird.getRotation());
+        } else {
+            batcher.draw(AssetLoader.birdAnimation.getKeyFrame(runTime),
+                    bird.getX(),
+                    bird.getY(),
+                    bird.getWidth() / 2.0f,
+                    bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(), 1,1, bird.getRotation());
+        }
+
+
 
         batcher.end();
+    }
+
+    private void initGameObjects(){
+        bird = gameWorld.getBird();
+    }
+
+    private void initAssets() {
+        bg = AssetLoader.bg;
+        grass = AssetLoader.grass;
+        birdAnimation = AssetLoader.birdAnimation;
+        birdMid = AssetLoader.bird;
+        birdDown = AssetLoader.birdDown;
+        birdUp = AssetLoader.birdUp;
+        skullUp = AssetLoader.skullUp;
+        skullDown = AssetLoader.skullDown;
+        bar = AssetLoader.bar;
     }
 
 }

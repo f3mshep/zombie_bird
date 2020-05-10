@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.scapeshift.zombiebird.gameobjects.Bird;
 
 public class AssetLoader {
 
@@ -25,6 +24,9 @@ public class AssetLoader {
 
         grass = new TextureRegion(texture, 0, 43, 143, 11);
         grass.flip(false, true);
+
+        birdDown = new TextureRegion(texture, 136, 0, 17, 12);
+        birdDown.flip(false, true);
 
         bird = new TextureRegion(texture, 153, 0, 17, 12);
         bird.flip(false, true);
