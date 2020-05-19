@@ -1,23 +1,28 @@
 package com.scapeshift.zombiebird.gameworld;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.scapeshift.zombiebird.gameobjects.Bird;
+import com.scapeshift.zombiebird.gameobjects.*;
 import com.scapeshift.zombiebird.zbHelpers.AssetLoader;
 
 public class GameRenderer {
-
-    private Bird bird;
 
     private TextureRegion bg, grass;
     private Animation birdAnimation;
     private TextureRegion birdMid, birdDown, birdUp;
     private TextureRegion skullUp, skullDown, bar;
+
+    private Bird bird;
+    private ScrollHandler scrollHandler;
+    private Grass frontGrass, backGrass;
+    private Pipe pipe1, pipe2, pipe3;
+    private Background firstBg, lastBg;
 
     private GameWorld gameWorld;
     private OrthographicCamera camera;
@@ -65,10 +70,14 @@ public class GameRenderer {
         shapeRenderer.end();
 
         batcher.begin();
+
         batcher.disableBlending();
-        batcher.draw(bg, 0, midPointY + 23, 136, 43);
+        drawBackground();
 
         batcher.enableBlending();
+        drawGrass();
+        drawPipes();
+        drawSkulls();
 
         if (bird.shouldNotFlap()){
             batcher.draw(
@@ -90,8 +99,66 @@ public class GameRenderer {
         batcher.end();
     }
 
+    private void drawBackground(){
+        batcher.draw(bg, firstBg.getX(), firstBg.getY(), firstBg.getWidth(), firstBg.getHeight());
+        batcher.draw(bg, lastBg.getX(), lastBg.getY(), lastBg.getWidth(), lastBg.getHeight());
+    }
+
+    private void drawGrass(){
+        batcher.draw(grass, frontGrass.getX(), frontGrass.getY(), frontGrass.getWidth(), frontGrass.getHeight());
+        batcher.draw(grass, backGrass.getX(), backGrass.getY(), backGrass.getWidth(), backGrass.getHeight());
+    }
+
+
+    private void drawPipes() {
+        // Temporary code! Sorry about the mess :)
+        // We will fix this when we finish the Pipe class.
+        batcher.draw(bar, pipe1.getX(), pipe1.getY(), pipe1.getWidth(),
+                pipe1.getHeight());
+        batcher.draw(bar, pipe1.getX(), pipe1.getY() + pipe1.getHeight() + 45,
+                pipe1.getWidth(), midPointY + 66 - (pipe1.getHeight() + 45));
+
+        batcher.draw(bar, pipe2.getX(), pipe2.getY(), pipe2.getWidth(),
+                pipe2.getHeight());
+        batcher.draw(bar, pipe2.getX(), pipe2.getY() + pipe2.getHeight() + 45,
+                pipe2.getWidth(), midPointY + 66 - (pipe2.getHeight() + 45));
+
+        batcher.draw(bar, pipe3.getX(), pipe3.getY(), pipe3.getWidth(),
+                pipe3.getHeight());
+        batcher.draw(bar, pipe3.getX(), pipe3.getY() + pipe3.getHeight() + 45,
+                pipe3.getWidth(), midPointY + 66 - (pipe3.getHeight() + 45));
+    }
+
+    private void drawSkulls() {
+        // Temporary code! Sorry about the mess :)
+        // We will fix this when we finish the Pipe class.
+
+        batcher.draw(skullUp, pipe1.getX() - 1,
+                pipe1.getY() + pipe1.getHeight() - 14, 24, 14);
+        batcher.draw(skullDown, pipe1.getX() - 1,
+                pipe1.getY() + pipe1.getHeight() + 45, 24, 14);
+
+        batcher.draw(skullUp, pipe2.getX() - 1,
+                pipe2.getY() + pipe2.getHeight() - 14, 24, 14);
+        batcher.draw(skullDown, pipe2.getX() - 1,
+                pipe2.getY() + pipe2.getHeight() + 45, 24, 14);
+
+        batcher.draw(skullUp, pipe3.getX() - 1,
+                pipe3.getY() + pipe3.getHeight() - 14, 24, 14);
+        batcher.draw(skullDown, pipe3.getX() - 1,
+                pipe3.getY() + pipe3.getHeight() + 45, 24, 14);
+    }
+
     private void initGameObjects(){
         bird = gameWorld.getBird();
+        scrollHandler = gameWorld.getScrollHandler();
+        frontGrass = scrollHandler.getFrontGrass();
+        backGrass = scrollHandler.getBackGrass();
+        pipe1 = scrollHandler.getPipe1();
+        pipe2 = scrollHandler.getPipe2();
+        pipe3 = scrollHandler.getPipe3();
+        firstBg = scrollHandler.getFirstBg();
+        lastBg = scrollHandler.getLastBg();
     }
 
     private void initAssets() {
