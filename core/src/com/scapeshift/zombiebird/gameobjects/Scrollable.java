@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class Scrollable {
 
-    private Vector2 position, velocity;
+    Vector2 position, velocity;
     int width, height;
     boolean isScrolledLeft;
 
@@ -27,6 +27,10 @@ public abstract class Scrollable {
     public void reset(float newX){
         position.x = newX;
         isScrolledLeft = false;
+    }
+
+    public void stop(){
+        velocity.x = 0;
     }
 
     public float getTailX(){

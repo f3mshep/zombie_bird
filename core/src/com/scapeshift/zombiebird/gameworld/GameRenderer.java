@@ -93,9 +93,6 @@ public class GameRenderer {
                     bird.getWidth() / 2.0f,
                     bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(), 1,1, bird.getRotation());
         }
-
-
-
         batcher.end();
     }
 
